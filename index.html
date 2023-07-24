@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Chat Example</title>
+</head>
+<body>
+<form id="chatForm">
+  <input type="text" id="type" placeholder="Enter your username">
+  <input type="text" id="message" placeholder="Type a message">
+  <button type="submit">Send</button>
+</form>
+<ul id="messages"></ul>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+<script>
+  const socket = io('http://localhost:3000');
+  const chatForm = document.querySelector('#chatForm');
+  const usernameInput = document.querySelector('#type');
+  const messageInput = document.querySelector('#message');
+  const messagesList = document.querySelector('#messages');
+
+  socket.on('connect', () => {
+    console.log('Connected to WebSocket server');
+  });
+
+  socket.on('chat', (message) => {
+    console.log('Received message:', message);
+    const messageItem = document.createElement('li');
+    if (message.type) {
+      messageItem.textContent = `${message.type}: ${message.text}`;
+    } else {
+      messageItem.textContent = `bot: ${message}`;
+    }
+    messagesList.appendChild(messageItem);
+  });
+
+  chatForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const type = usernameInput.value.trim();
+    const message = messageInput.value.trim();
+    if (type && message) {
+      const chatMessage = { type, text: message };
+      socket.emit('chat', chatMessage);
+      messageInput.value = '';
+    }
+  });
+</script>
+</body>
+</html>
