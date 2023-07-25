@@ -8,6 +8,6 @@ async function bootstrap() {
   const url = process.env.CYCLIC_URL;
   logger.log(url);
 
-  await app.listen(url || 3000);
+  await app.listen('https://lime-agile-lemming.cyclic.app/');
 }
 bootstrap();
