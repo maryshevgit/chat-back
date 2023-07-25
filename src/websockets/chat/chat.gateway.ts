@@ -77,9 +77,9 @@ export class ChatGateway implements OnGatewayInit {
   }
 
   @SubscribeMessage('chat')
-  async handleMessage(client: any, message: MessageDto) {
+  async handleMessage(client: any, message: string) {
     await this.messageRepository
-      .save(message.type, message.text)
+      .save('user', message)
       .catch((err) => this.logger.error(err));
     this.server.emit('chat', message);
 
